@@ -6,6 +6,7 @@ import Html.Attributes exposing (class, placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as JD
+import Json.Decode.Pipeline as JDP
 import Json.Encode as JE
 import Platform.Cmd as Cmd
 import Time
@@ -56,9 +57,10 @@ type alias Message =
 messagesDecoder : JD.Decoder (List Message)
 messagesDecoder =
     JD.list
-        (JD.map2 Message
-            (JD.field "message" JD.string)
-            (JD.field "author" JD.string)
+        (
+            JD.succeed Message
+                |> JDP.required "message" JD.string
+                |> JDP.required "author" JD.string
         )
 
 
